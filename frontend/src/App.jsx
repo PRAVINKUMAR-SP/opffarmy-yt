@@ -28,6 +28,7 @@ import Help from './pages/Help';
 import Feedback from './pages/Feedback';
 import Playlists from './pages/Playlists';
 import PlaylistDetail from './pages/PlaylistDetail';
+import BottomNav from './components/BottomNav';
 
 function App() {
     const { isAdmin } = useUser();
@@ -39,7 +40,7 @@ function App() {
                         <Header />
                         <div className="flex flex-1 overflow-hidden">
                             <Sidebar />
-                            <main className="flex-1 overflow-y-auto bg-yt-bg pb-10">
+                            <main className="flex-1 overflow-y-auto bg-yt-bg pb-14 lg:pb-10">
                                 <Routes>
                                     <Route path="/" element={<Home />} />
                                     <Route path="/watch/:id" element={<Watch />} />
@@ -86,6 +87,7 @@ function App() {
                                 </Routes>
                             </main>
                         </div>
+                        <BottomNav />
                     </div>
                 </Router>
             </SidebarProvider>

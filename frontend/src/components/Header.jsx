@@ -31,6 +31,7 @@ const Header = () => {
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
     const [isListening, setIsListening] = useState(false);
+    const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -135,280 +136,323 @@ const Header = () => {
     };
 
     return (
-        <header className="flex justify-between items-center px-4 py-2 bg-yt-bg sticky top-0 z-50 h-14">
-            <div className="flex items-center gap-4">
-                <button
-                    onClick={toggleSidebar}
-                    className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text"
-                >
-                    <Menu size={24} />
-                </button>
-                <Link to="/" className="flex items-center gap-1 group">
-                    <div className="bg-yt-red p-1 rounded-md group-hover:bg-red-600 transition-colors">
-                        <Video size={18} fill="white" color="white" />
-                    </div>
-                    <span className="text-xl font-bold tracking-custom text-yt-text">OPFFARMY</span>
-                </Link>
-            </div>
-
-            <div className="flex flex-1 max-w-[700px] ml-10 items-center gap-4 px-4 relative" ref={suggestionsRef}>
-                <form
-                    onSubmit={handleSearch}
-                    className="flex flex-1 items-center"
-                >
-                    <div className="flex w-full">
-                        <div className="flex flex-1 items-center bg-yt-bg-secondary border border-yt-border rounded-l-full px-4 focus-within:border-yt-blue focus-within:ring-1 focus-within:ring-yt-blue">
-                            <input
-                                type="text"
-                                placeholder="Search"
-                                className="bg-transparent text-yt-text w-full py-2 outline-none"
-                                value={searchQuery}
-                                onChange={(e) => {
-                                    setSearchQuery(e.target.value);
-                                    setShowSuggestions(true);
-                                    setSelectedIndex(-1);
-                                }}
-                                onFocus={() => setShowSuggestions(true)}
-                                onKeyDown={handleKeyDown}
-                            />
-                        </div>
-                        <button className="bg-yt-bg-hover border border-l-0 border-yt-border px-5 rounded-r-full hover:bg-yt-bg-secondary transition-colors">
-                            <Search size={18} className="text-yt-text" />
-                        </button>
-                    </div>
-                </form>
-
-                {showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute top-full left-4 right-14 mt-1 bg-yt-bg-elevated border border-yt-border rounded-xl shadow-2xl py-2 overflow-hidden animate-scale-in z-[60]">
-                        {suggestions.map((item, index) => (
-                            <div
-                                key={index}
-                                onClick={() => handleSuggestionClick(item)}
-                                className={`flex items-center gap-3 px-4 py-2 cursor-default transition-colors ${index === selectedIndex ? 'bg-white bg-opacity-10' : 'hover:bg-white hover:bg-opacity-5'}`}
-                            >
-                                <Search size={16} className="text-yt-text-secondary" />
-                                <span className="text-[15px] font-medium text-yt-text truncate">{item}</span>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                <button
-                    type="button"
-                    onClick={handleVoiceSearch}
-                    className={`p-2 rounded-full text-yt-text hidden sm:block transition-all ${isListening ? 'bg-red-600 animate-pulse' : 'bg-yt-bg-secondary hover:bg-yt-bg-hover'}`}
-                >
-                    <Mic size={20} />
-                </button>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-4">
-                {user && (
-                    <div className="relative">
-                        <button
-                            onClick={() => setIsCreateMenuOpen(!isCreateMenuOpen)}
-                            className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text hidden sm:block transition-all active:scale-90"
-                        >
-                            <Video size={24} />
-                        </button>
-
-                        {isCreateMenuOpen && (
-                            <div className="absolute top-full right-0 mt-2 w-48 bg-yt-bg-elevated border border-yt-border rounded-xl shadow-2xl py-2 z-50 animate-scale-in">
-                                {!user.channelId ? (
-                                    <button
-                                        onClick={() => { setIsCCModalOpen(true); setIsCreateMenuOpen(false); }}
-                                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
-                                    >
-                                        <Plus size={20} className="text-yt-blue" />
-                                        <span className="text-sm">Create channel</span>
-                                    </button>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={() => { setIsUploadModalOpen(true); setIsCreateMenuOpen(false); }}
-                                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
-                                        >
-                                            <Video size={20} className="text-yt-text-secondary" />
-                                            <span className="text-sm">Upload video</span>
-                                        </button>
-                                        <button
-                                            onClick={() => { setIsUploadModalOpen(true); setIsCreateMenuOpen(false); }}
-                                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
-                                        >
-                                            <Radio size={20} className="text-yt-text-secondary" />
-                                            <span className="text-sm">Go live</span>
-                                        </button>
-                                        <button
-                                            onClick={() => { setIsPostModalOpen(true); setIsCreateMenuOpen(false); }}
-                                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
-                                        >
-                                            <Send size={20} className="text-yt-text-secondary" />
-                                            <span className="text-sm">Create post</span>
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
-                <button className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text hidden sm:block">
-                    <Bell size={24} />
-                </button>
-
-                {user ? (
-                    <div className="relative ml-2">
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="w-8 h-8 rounded-full overflow-hidden border border-yt-border active:scale-95 transition-all"
-                        >
-                            <img src={user.avatar} className="w-full h-full object-cover" />
-                        </button>
-                        <ProfileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-                    </div>
-                ) : (
+        <>
+            <header className="flex justify-between items-center px-3 sm:px-4 py-2 bg-yt-bg sticky top-0 z-50 h-14">
+                <div className="flex items-center gap-2 sm:gap-4">
                     <button
-                        onClick={() => setIsLoginModalOpen(true)}
-                        className="flex items-center gap-2 px-3 py-1.5 border border-yt-border text-yt-blue rounded-full text-sm font-medium hover:bg-yt-blue hover:bg-opacity-10 transition-all active:scale-95"
+                        onClick={toggleSidebar}
+                        className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text hidden lg:block"
                     >
-                        <LogIn size={20} strokeWidth={2.5} />
-                        Sign in
+                        <Menu size={24} />
                     </button>
-                )}
-            </div>
+                    <Link to="/" className="flex items-center gap-1 group">
+                        <div className="bg-yt-red p-1 rounded-md group-hover:bg-red-600 transition-colors">
+                            <Video size={18} fill="white" color="white" />
+                        </div>
+                        <span className="text-xl font-bold tracking-custom text-yt-text">OPFFARMY</span>
+                    </Link>
+                </div>
 
-            {/* Auth Modal */}
-            {isLoginModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80 p-4 animate-fade-in backdrop-blur-sm">
-                    <div className="bg-yt-bg-secondary border border-yt-border rounded-2xl w-full max-w-[400px] overflow-hidden shadow-2xl animate-scale-in">
-                        <div className="flex border-b border-yt-border">
-                            <button
-                                onClick={() => { setAuthMode('login'); setAuthError(''); }}
-                                className={`flex-1 py-4 text-sm font-bold transition-all ${authMode === 'login' ? 'text-yt-blue border-b-2 border-yt-blue bg-white bg-opacity-5' : 'text-yt-text-secondary hover:bg-white hover:bg-opacity-5'}`}
-                            >
-                                Sign In
-                            </button>
-                            <button
-                                onClick={() => { setAuthMode('signup'); setAuthError(''); }}
-                                className={`flex-1 py-4 text-sm font-bold transition-all ${authMode === 'signup' ? 'text-yt-blue border-b-2 border-yt-blue bg-white bg-opacity-5' : 'text-yt-text-secondary hover:bg-white hover:bg-opacity-5'}`}
-                            >
-                                Create Account
+                <div className="hidden sm:flex flex-1 max-w-[700px] ml-10 items-center gap-4 px-4 relative" ref={suggestionsRef}>
+                    <form
+                        onSubmit={handleSearch}
+                        className="flex flex-1 items-center"
+                    >
+                        <div className="flex w-full">
+                            <div className="flex flex-1 items-center bg-yt-bg-secondary border border-yt-border rounded-l-full px-4 focus-within:border-yt-blue focus-within:ring-1 focus-within:ring-yt-blue">
+                                <input
+                                    type="text"
+                                    placeholder="Search"
+                                    className="bg-transparent text-yt-text w-full py-2 outline-none"
+                                    value={searchQuery}
+                                    onChange={(e) => {
+                                        setSearchQuery(e.target.value);
+                                        setShowSuggestions(true);
+                                        setSelectedIndex(-1);
+                                    }}
+                                    onFocus={() => setShowSuggestions(true)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+                            <button className="bg-yt-bg-hover border border-l-0 border-yt-border px-5 rounded-r-full hover:bg-yt-bg-secondary transition-colors">
+                                <Search size={18} className="text-yt-text" />
                             </button>
                         </div>
+                    </form>
 
-                        <form onSubmit={handleAuthAction} className="p-8 flex flex-col gap-5">
-                            <div className="flex flex-col items-center gap-2 mb-2">
-                                <div className="p-3 bg-yt-red bg-opacity-10 rounded-full">
-                                    <Shield size={32} className="text-yt-red" />
+                    {showSuggestions && suggestions.length > 0 && (
+                        <div className="absolute top-full left-4 right-14 mt-1 bg-yt-bg-elevated border border-yt-border rounded-xl shadow-2xl py-2 overflow-hidden animate-scale-in z-[60]">
+                            {suggestions.map((item, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => handleSuggestionClick(item)}
+                                    className={`flex items-center gap-3 px-4 py-2 cursor-default transition-colors ${index === selectedIndex ? 'bg-white bg-opacity-10' : 'hover:bg-white hover:bg-opacity-5'}`}
+                                >
+                                    <Search size={16} className="text-yt-text-secondary" />
+                                    <span className="text-[15px] font-medium text-yt-text truncate">{item}</span>
                                 </div>
-                                <h2 className="text-xl font-bold">
-                                    {authMode === 'login' ? 'Welcome Back' : 'Join OPFFARMY'}
-                                </h2>
-                                <p className="text-xs text-yt-text-secondary text-center px-4">
-                                    {authMode === 'signup'
-                                        ? 'Note: Use an email containing "admin" to get admin access for this demo.'
-                                        : 'Enter your credentials to manage your account.'}
-                                </p>
-                            </div>
+                            ))}
+                        </div>
+                    )}
 
-                            {authError && (
-                                <div className="bg-red-500 bg-opacity-10 border border-red-500 text-red-500 px-4 py-2 rounded-lg text-xs text-center font-medium">
-                                    {authError}
+                    <button
+                        type="button"
+                        onClick={handleVoiceSearch}
+                        className={`p-2 rounded-full text-yt-text hidden sm:block transition-all ${isListening ? 'bg-red-600 animate-pulse' : 'bg-yt-bg-secondary hover:bg-yt-bg-hover'}`}
+                    >
+                        <Mic size={20} />
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-1 sm:gap-4">
+                    {/* Mobile Search Icon */}
+                    <button
+                        onClick={() => setMobileSearchOpen(true)}
+                        className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text sm:hidden"
+                    >
+                        <Search size={22} />
+                    </button>
+                    {user && (
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsCreateMenuOpen(!isCreateMenuOpen)}
+                                className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text hidden sm:block transition-all active:scale-90"
+                            >
+                                <Video size={24} />
+                            </button>
+
+                            {isCreateMenuOpen && (
+                                <div className="absolute top-full right-0 mt-2 w-48 bg-yt-bg-elevated border border-yt-border rounded-xl shadow-2xl py-2 z-50 animate-scale-in">
+                                    {!user.channelId ? (
+                                        <button
+                                            onClick={() => { setIsCCModalOpen(true); setIsCreateMenuOpen(false); }}
+                                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
+                                        >
+                                            <Plus size={20} className="text-yt-blue" />
+                                            <span className="text-sm">Create channel</span>
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={() => { setIsUploadModalOpen(true); setIsCreateMenuOpen(false); }}
+                                                className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
+                                            >
+                                                <Video size={20} className="text-yt-text-secondary" />
+                                                <span className="text-sm">Upload video</span>
+                                            </button>
+                                            <button
+                                                onClick={() => { setIsUploadModalOpen(true); setIsCreateMenuOpen(false); }}
+                                                className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
+                                            >
+                                                <Radio size={20} className="text-yt-text-secondary" />
+                                                <span className="text-sm">Go live</span>
+                                            </button>
+                                            <button
+                                                onClick={() => { setIsPostModalOpen(true); setIsCreateMenuOpen(false); }}
+                                                className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
+                                            >
+                                                <Send size={20} className="text-yt-text-secondary" />
+                                                <span className="text-sm">Create post</span>
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             )}
+                        </div>
+                    )}
+                    <button className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text hidden sm:block">
+                        <Bell size={24} />
+                    </button>
 
-                            <div className="flex flex-col gap-4">
-                                {authMode === 'signup' && (
+                    {user ? (
+                        <div className="relative ml-2">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="w-8 h-8 rounded-full overflow-hidden border border-yt-border active:scale-95 transition-all"
+                            >
+                                <img src={user.avatar} className="w-full h-full object-cover" />
+                            </button>
+                            <ProfileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setIsLoginModalOpen(true)}
+                            className="flex items-center gap-2 px-3 py-1.5 border border-yt-border text-yt-blue rounded-full text-sm font-medium hover:bg-yt-blue hover:bg-opacity-10 transition-all active:scale-95"
+                        >
+                            <LogIn size={20} strokeWidth={2.5} />
+                            Sign in
+                        </button>
+                    )}
+                </div>
+
+                {/* Auth Modal */}
+                {isLoginModalOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80 p-4 animate-fade-in backdrop-blur-sm">
+                        <div className="bg-yt-bg-secondary border border-yt-border rounded-2xl w-full max-w-[400px] overflow-hidden shadow-2xl animate-scale-in">
+                            <div className="flex border-b border-yt-border">
+                                <button
+                                    onClick={() => { setAuthMode('login'); setAuthError(''); }}
+                                    className={`flex-1 py-4 text-sm font-bold transition-all ${authMode === 'login' ? 'text-yt-blue border-b-2 border-yt-blue bg-white bg-opacity-5' : 'text-yt-text-secondary hover:bg-white hover:bg-opacity-5'}`}
+                                >
+                                    Sign In
+                                </button>
+                                <button
+                                    onClick={() => { setAuthMode('signup'); setAuthError(''); }}
+                                    className={`flex-1 py-4 text-sm font-bold transition-all ${authMode === 'signup' ? 'text-yt-blue border-b-2 border-yt-blue bg-white bg-opacity-5' : 'text-yt-text-secondary hover:bg-white hover:bg-opacity-5'}`}
+                                >
+                                    Create Account
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleAuthAction} className="p-8 flex flex-col gap-5">
+                                <div className="flex flex-col items-center gap-2 mb-2">
+                                    <div className="p-3 bg-yt-red bg-opacity-10 rounded-full">
+                                        <Shield size={32} className="text-yt-red" />
+                                    </div>
+                                    <h2 className="text-xl font-bold">
+                                        {authMode === 'login' ? 'Welcome Back' : 'Join OPFFARMY'}
+                                    </h2>
+                                    <p className="text-xs text-yt-text-secondary text-center px-4">
+                                        {authMode === 'signup'
+                                            ? 'Note: Use an email containing "admin" to get admin access for this demo.'
+                                            : 'Enter your credentials to manage your account.'}
+                                    </p>
+                                </div>
+
+                                {authError && (
+                                    <div className="bg-red-500 bg-opacity-10 border border-red-500 text-red-500 px-4 py-2 rounded-lg text-xs text-center font-medium">
+                                        {authError}
+                                    </div>
+                                )}
+
+                                <div className="flex flex-col gap-4">
+                                    {authMode === 'signup' && (
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[11px] font-bold text-yt-text-secondary uppercase tracking-wider ml-1">Full Name</label>
+                                            <div className="flex items-center gap-3 bg-yt-bg px-4 py-3 rounded-xl border border-yt-border focus-within:border-yt-blue transition-all">
+                                                <User size={18} className="text-yt-text-secondary" />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Pravin Kumar"
+                                                    className="bg-transparent outline-none text-sm w-full"
+                                                    value={formData.name}
+                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="flex flex-col gap-1.5">
-                                        <label className="text-[11px] font-bold text-yt-text-secondary uppercase tracking-wider ml-1">Full Name</label>
+                                        <label className="text-[11px] font-bold text-yt-text-secondary uppercase tracking-wider ml-1">Email Address</label>
                                         <div className="flex items-center gap-3 bg-yt-bg px-4 py-3 rounded-xl border border-yt-border focus-within:border-yt-blue transition-all">
-                                            <User size={18} className="text-yt-text-secondary" />
+                                            <LogIn size={18} className="text-yt-text-secondary" />
                                             <input
-                                                type="text"
-                                                placeholder="Pravin Kumar"
+                                                type="email"
+                                                placeholder="example@mail.com"
                                                 className="bg-transparent outline-none text-sm w-full"
-                                                value={formData.name}
-                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             />
                                         </div>
                                     </div>
-                                )}
 
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-[11px] font-bold text-yt-text-secondary uppercase tracking-wider ml-1">Email Address</label>
-                                    <div className="flex items-center gap-3 bg-yt-bg px-4 py-3 rounded-xl border border-yt-border focus-within:border-yt-blue transition-all">
-                                        <LogIn size={18} className="text-yt-text-secondary" />
-                                        <input
-                                            type="email"
-                                            placeholder="example@mail.com"
-                                            className="bg-transparent outline-none text-sm w-full"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        />
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-[11px] font-bold text-yt-text-secondary uppercase tracking-wider ml-1">Password</label>
+                                        <div className="flex items-center gap-3 bg-yt-bg px-4 py-3 rounded-xl border border-yt-border focus-within:border-yt-blue transition-all">
+                                            <Shield size={18} className="text-yt-text-secondary" />
+                                            <input
+                                                type="password"
+                                                placeholder="••••••••"
+                                                className="bg-transparent outline-none text-sm w-full"
+                                                value={formData.password}
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-[11px] font-bold text-yt-text-secondary uppercase tracking-wider ml-1">Password</label>
-                                    <div className="flex items-center gap-3 bg-yt-bg px-4 py-3 rounded-xl border border-yt-border focus-within:border-yt-blue transition-all">
-                                        <Shield size={18} className="text-yt-text-secondary" />
-                                        <input
-                                            type="password"
-                                            placeholder="••••••••"
-                                            className="bg-transparent outline-none text-sm w-full"
-                                            value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        />
-                                    </div>
+                                <button
+                                    type="submit"
+                                    className="w-full bg-yt-blue text-[#0f0f0f] py-3.5 rounded-xl font-bold mt-2 hover:bg-opacity-90 transition-all active:scale-95 shadow-lg shadow-yt-blue/10"
+                                >
+                                    {authMode === 'login' ? 'Sign In' : 'Create Account'}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={async () => { await login('user'); setIsLoginModalOpen(false); }}
+                                    className="text-xs text-yt-text-secondary hover:underline text-center"
+                                >
+                                    Continue as Guest
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                <CreateChannelModal
+                    isOpen={isCCModalOpen}
+                    onClose={() => setIsCCModalOpen(false)}
+                    onSuccess={(channel) => {
+                        const updatedUser = { ...user, channelId: channel._id };
+                        setUser(updatedUser);
+                        localStorage.setItem('yt_user', JSON.stringify(updatedUser));
+                    }}
+                />
+
+                <UploadModal
+                    isOpen={isUploadModalOpen}
+                    onClose={() => setIsUploadModalOpen(false)}
+                    onSuccess={(video) => {
+                        if (window.location.pathname === '/') window.location.reload();
+                        else navigate('/');
+                    }}
+                />
+
+                <CreatePostModal
+                    isOpen={isPostModalOpen}
+                    onClose={() => setIsPostModalOpen(false)}
+                    onSuccess={(post) => {
+                        if (window.location.pathname === '/community') window.location.reload();
+                        else navigate('/community');
+                    }}
+                />
+            </header>
+
+            {/* Mobile Search Overlay */}
+            {mobileSearchOpen && (
+                <div className="fixed inset-0 z-[200] bg-yt-bg flex flex-col sm:hidden animate-fade-in">
+                    <div className="flex items-center gap-2 px-2 py-2 border-b border-yt-border">
+                        <button onClick={() => setMobileSearchOpen(false)} className="p-2 hover:bg-yt-bg-hover rounded-full text-yt-text">
+                            <Menu size={22} />
+                        </button>
+                        <form onSubmit={(e) => { handleSearch(e); setMobileSearchOpen(false); }} className="flex flex-1 items-center">
+                            <div className="flex w-full">
+                                <div className="flex flex-1 items-center bg-yt-bg-secondary border border-yt-border rounded-l-full px-4 focus-within:border-yt-blue">
+                                    <input
+                                        autoFocus
+                                        type="text"
+                                        placeholder="Search"
+                                        className="bg-transparent text-yt-text w-full py-2 outline-none text-sm"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                 </div>
+                                <button type="submit" className="bg-yt-bg-hover border border-l-0 border-yt-border px-4 rounded-r-full">
+                                    <Search size={18} className="text-yt-text" />
+                                </button>
                             </div>
-
-                            <button
-                                type="submit"
-                                className="w-full bg-yt-blue text-[#0f0f0f] py-3.5 rounded-xl font-bold mt-2 hover:bg-opacity-90 transition-all active:scale-95 shadow-lg shadow-yt-blue/10"
-                            >
-                                {authMode === 'login' ? 'Sign In' : 'Create Account'}
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={async () => { await login('user'); setIsLoginModalOpen(false); }}
-                                className="text-xs text-yt-text-secondary hover:underline text-center"
-                            >
-                                Continue as Guest
-                            </button>
                         </form>
+                        <button
+                            onClick={handleVoiceSearch}
+                            className={`p-2 rounded-full text-yt-text ${isListening ? 'bg-red-600 animate-pulse' : 'bg-yt-bg-secondary hover:bg-yt-bg-hover'}`}
+                        >
+                            <Mic size={20} />
+                        </button>
                     </div>
                 </div>
             )}
-
-            <CreateChannelModal
-                isOpen={isCCModalOpen}
-                onClose={() => setIsCCModalOpen(false)}
-                onSuccess={(channel) => {
-                    const updatedUser = { ...user, channelId: channel._id };
-                    setUser(updatedUser);
-                    localStorage.setItem('yt_user', JSON.stringify(updatedUser));
-                }}
-            />
-
-            <UploadModal
-                isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
-                onSuccess={(video) => {
-                    if (window.location.pathname === '/') window.location.reload();
-                    else navigate('/');
-                }}
-            />
-
-            <CreatePostModal
-                isOpen={isPostModalOpen}
-                onClose={() => setIsPostModalOpen(false)}
-                onSuccess={(post) => {
-                    if (window.location.pathname === '/community') window.location.reload();
-                    else navigate('/community');
-                }}
-            />
-        </header>
+        </>
     );
 };
 
