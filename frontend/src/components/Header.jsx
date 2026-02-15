@@ -17,21 +17,14 @@ const Header = () => {
     const suggestionsRef = React.useRef(null);
     const { toggleSidebar } = useSidebar();
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
-    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-    const [authError, setAuthError] = useState('');
-    const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
-
-    const navigate = useNavigate();
-    const { user, loginWithCredentials, register, setUser } = useUser();
-    const [isCCModalOpen, setIsCCModalOpen] = useState(false);
-    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-
     const [isListening, setIsListening] = useState(false);
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+    const {
+        isUploadModalOpen, openUpload, closeUpload,
+        isPostModalOpen, openPost, closePost,
+        isCCModalOpen, openCC, closeCC,
+        isLoginModalOpen, openLogin, closeLogin
+    } = useModals();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -225,7 +218,7 @@ const Header = () => {
                                 <div className="absolute top-full right-0 mt-2 w-48 bg-yt-bg-elevated border border-yt-border rounded-xl shadow-2xl py-2 z-50 animate-scale-in">
                                     {!user.channelId ? (
                                         <button
-                                            onClick={() => { setIsCCModalOpen(true); setIsCreateMenuOpen(false); }}
+                                            onClick={() => { openCC(); setIsCreateMenuOpen(false); }}
                                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
                                         >
                                             <Plus size={20} className="text-yt-blue" />
@@ -234,21 +227,21 @@ const Header = () => {
                                     ) : (
                                         <>
                                             <button
-                                                onClick={() => { setIsUploadModalOpen(true); setIsCreateMenuOpen(false); }}
+                                                onClick={() => { openUpload(); setIsCreateMenuOpen(false); }}
                                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
                                             >
                                                 <Video size={20} className="text-yt-text-secondary" />
                                                 <span className="text-sm">Upload video</span>
                                             </button>
                                             <button
-                                                onClick={() => { setIsUploadModalOpen(true); setIsCreateMenuOpen(false); }}
+                                                onClick={() => { openUpload(); setIsCreateMenuOpen(false); }}
                                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
                                             >
                                                 <Radio size={20} className="text-yt-text-secondary" />
                                                 <span className="text-sm">Go live</span>
                                             </button>
                                             <button
-                                                onClick={() => { setIsPostModalOpen(true); setIsCreateMenuOpen(false); }}
+                                                onClick={() => { openPost(); setIsCreateMenuOpen(false); }}
                                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white hover:bg-opacity-5 transition-colors text-left"
                                             >
                                                 <Send size={20} className="text-yt-text-secondary" />
@@ -276,7 +269,7 @@ const Header = () => {
                         </div>
                     ) : (
                         <button
-                            onClick={() => setIsLoginModalOpen(true)}
+                            onClick={openLogin}
                             className="flex items-center gap-2 px-3 py-1.5 border border-yt-border text-yt-blue rounded-full text-sm font-medium hover:bg-yt-blue hover:bg-opacity-10 transition-all active:scale-95"
                         >
                             <LogIn size={20} strokeWidth={2.5} />
@@ -287,7 +280,7 @@ const Header = () => {
 
                 {/* Auth Modal */}
                 {isLoginModalOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80 p-4 animate-fade-in backdrop-blur-sm">
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-80 p-4 animate-fade-in backdrop-blur-sm">
                         <div className="bg-yt-bg-secondary border border-yt-border rounded-2xl w-full max-w-[400px] overflow-hidden shadow-2xl animate-scale-in">
                             <div className="flex border-b border-yt-border">
                                 <button
@@ -380,7 +373,7 @@ const Header = () => {
 
                                 <button
                                     type="button"
-                                    onClick={async () => { await login('user'); setIsLoginModalOpen(false); }}
+                                    onClick={async () => { await login('user'); closeLogin(); }}
                                     className="text-xs text-yt-text-secondary hover:underline text-center"
                                 >
                                     Continue as Guest
@@ -392,7 +385,7 @@ const Header = () => {
 
                 <CreateChannelModal
                     isOpen={isCCModalOpen}
-                    onClose={() => setIsCCModalOpen(false)}
+                    onClose={closeCC}
                     onSuccess={(channel) => {
                         const updatedUser = { ...user, channelId: channel._id };
                         setUser(updatedUser);
@@ -402,7 +395,7 @@ const Header = () => {
 
                 <UploadModal
                     isOpen={isUploadModalOpen}
-                    onClose={() => setIsUploadModalOpen(false)}
+                    onClose={closeUpload}
                     onSuccess={(video) => {
                         if (window.location.pathname === '/') window.location.reload();
                         else navigate('/');
@@ -411,7 +404,7 @@ const Header = () => {
 
                 <CreatePostModal
                     isOpen={isPostModalOpen}
-                    onClose={() => setIsPostModalOpen(false)}
+                    onClose={closePost}
                     onSuccess={(post) => {
                         if (window.location.pathname === '/community') window.location.reload();
                         else navigate('/community');

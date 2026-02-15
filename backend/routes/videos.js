@@ -69,7 +69,11 @@ router.get('/trending', async (req, res) => {
 // GET /api/videos/:id — Single video
 router.get('/:id', async (req, res) => {
     try {
-        const video = await Video.findById(req.params.id)
+        const video = await Video.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { views: 1 } },
+            { new: true }
+        )
             .populate('channel', 'name handle avatarUrl isVerified subscribers description bannerUrl')
             .populate('categories', 'name');
 

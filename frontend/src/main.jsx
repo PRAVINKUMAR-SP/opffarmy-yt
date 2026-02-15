@@ -4,11 +4,14 @@ import App from './App.jsx'
 import './index.css'
 
 import { UserProvider } from './context/UserContext';
+import { ModalProvider } from './context/ModalContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <UserProvider>
-            <App />
+            <ModalProvider>
+                <App />
+            </ModalProvider>
         </UserProvider>
     </React.StrictMode>,
 )
