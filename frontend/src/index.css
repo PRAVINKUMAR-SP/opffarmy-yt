@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default Dark Mode Theme */
+  --yt-bg: #0f0f0f;
+  --yt-bg-secondary: #1a1a1a;
+  --yt-bg-hover: #272727;
+  --yt-bg-elevated: #212121;
+  --yt-text: #f1f1f1;
+  --yt-text-secondary: #aaaaaa;
+  --yt-red: #ff0000;
+  --yt-red-hover: #cc0000;
+  --yt-blue: #3ea6ff;
+  --yt-border: #333333;
+  --yt-chip: rgba(255, 255, 255, 0.1);
+  --yt-chip-active: #f1f1f1;
+}
+
+[data-theme='light'] {
+  /* Light Mode Theme Overrides */
+  --yt-bg: #ffffff;
+  --yt-bg-secondary: #f2f2f2;
+  --yt-bg-hover: #e5e5e5;
+  --yt-bg-elevated: #ffffff;
+  --yt-text: #0f0f0f;
+  --yt-text-secondary: #606060;
+  --yt-red: #ff0000;
+  --yt-red-hover: #cc0000;
+  /* Maybe keep same or adjust */
+  --yt-blue: #065fd4;
+  /* Adjusted for better contrast on white */
+  --yt-border: #e5e5e5;
+  --yt-chip: rgba(0, 0, 0, 0.05);
+  --yt-chip-active: #0f0f0f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: var(--yt-bg);
+  color: var(--yt-text);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Smooth Transitions */
+a,
+button {
+  transition: all 0.2s ease;
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Video Player Custom Styles */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+/* Hide default video controls for custom player */
+video {
+  outline: none;
+}
+
+/* Category Bar Scrollbar */
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(33, 33, 33, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
