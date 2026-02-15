@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useUser } from '../context/UserContext';
 import { useSidebar } from '../context/SidebarContext';
+import { useModals } from '../context/ModalContext';
 import ProfileMenu from './ProfileMenu';
 import CreateChannelModal from './CreateChannelModal';
 import UploadModal from './UploadModal';
