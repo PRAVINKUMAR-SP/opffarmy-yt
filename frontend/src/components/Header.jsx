@@ -20,6 +20,14 @@ const Header = () => {
 
     const [isListening, setIsListening] = useState(false);
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
+    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [authError, setAuthError] = useState('');
+    const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+
+    const navigate = useNavigate();
+    const { user, loginWithCredentials, register, setUser } = useUser();
     const {
         isUploadModalOpen, openUpload, closeUpload,
         isPostModalOpen, openPost, closePost,
