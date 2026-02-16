@@ -27,7 +27,7 @@ const Header = () => {
     const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
 
     const navigate = useNavigate();
-    const { user, loginWithCredentials, register, setUser } = useUser();
+    const { user, loginWithCredentials, register, setUser, login } = useUser();
     const {
         isUploadModalOpen, openUpload, closeUpload,
         isPostModalOpen, openPost, closePost,
@@ -128,9 +128,12 @@ const Header = () => {
                 }
                 await register(formData.name, formData.email, formData.password);
             } else {
+                if (!formData.email || !formData.password) {
+                    throw new Error('Please enter both email and password');
+                }
                 await loginWithCredentials(formData.email, formData.password);
             }
-            setIsLoginModalOpen(false);
+            closeLogin();
             setFormData({ name: '', email: '', password: '' });
         } catch (err) {
             setAuthError(err.message);

@@ -46,23 +46,28 @@ export const UserProvider = ({ children }) => {
             try {
                 userSession = await api.login({ email: demoEmail, password: demoPassword });
             } catch (err) {
-                // If login fails, try to register the demo user
-                userSession = await api.register({
-                    name: demoName,
-                    email: demoEmail,
-                    password: demoPassword,
-                    role: role
-                });
+                // Only try to register if it's an "Invalid email or password" error (not found)
+                // If it's a 400 error (bad request), something else is wrong
+                if (err.message.includes('Invalid email or password')) {
+                    userSession = await api.register({
+                        name: demoName,
+                        email: demoEmail,
+                        password: demoPassword,
+                        role: role
+                    });
+                } else {
+                    throw err;
+                }
             }
             setUser(userSession);
             localStorage.setItem('yt_user', JSON.stringify(userSession));
         } catch (err) {
             console.error('Demo Login Error:', err);
-            // Absolute fallback to mock ONLY if API is totally unreachable
+            // Absolute fallback to mock ONLY if API is totally unreachable or other errors occur
             const guestUser = {
                 name: demoName,
                 email: demoEmail,
-                handle: role === 'admin' ? '@admin_demo' : '@guest_user',
+                handle: role === 'admin' ? '@admin_demo' : `@guest_${Math.floor(Math.random() * 1000)}`,
                 role: role,
                 avatar: getAvatar(demoName)
             };

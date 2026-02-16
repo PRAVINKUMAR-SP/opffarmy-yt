@@ -25,7 +25,7 @@ export const ModalProvider = ({ children }) => {
             isUploadModalOpen, openUpload, closeUpload,
             isPostModalOpen, openPost, closePost,
             isCCModalOpen, openCC, closeCC,
-            isLoginModalOpen, openLogin, closeLogin
+            isLoginModalOpen, setIsLoginModalOpen, openLogin, closeLogin
         }}>
             {children}
         </ModalContext.Provider>
